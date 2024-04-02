@@ -1,15 +1,13 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
-const url =
-  "mongodb+srv://munkhbold260:Wo8MXuBEhGiN9anI@cluster0.kpyvzjl.mongodb.net/";
-
+const uri: string = process.env.MONGO_DB_URL as string;
 const connect = async () => {
   try {
-    await mongoose.connect(url);
-    console.log("sdjbshd");
+    await mongoose.connect(uri);
+    console.log("Database connected successfully");
   } catch (error) {
     console.log(error);
   }
 };
 
-module.exports = connect;
+export default connect;

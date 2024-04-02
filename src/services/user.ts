@@ -1,6 +1,6 @@
 import { UserModel } from "@/models/user.schema";
 import jwt from "jsonwebtoken";
-// import { generateJwtToken } from "../utils/generate-token";
+import { generateJwtToken } from "../utils/generate-token";
 
 export const loginService = async (email: string, password: string) => {
   if (email == "admin@gmail.com" && password == "admin") {
@@ -18,11 +18,11 @@ export const loginService = async (email: string, password: string) => {
 };
 
 export const createUser = async (
-  firstName: string,
-  lastName: string,
+  name: string,
   email: string,
-  age: number
+  password: string
 ) => {
-  const createUser = UserModel.create({ firstName, lastName, email, age });
+  console.log("services user");
+  const createUser = UserModel.create({ name, email, password });
   return createUser;
 };
