@@ -8,4 +8,5 @@ const UserSchema = new Schema({
   updatedAt: Date,
 });
 
+console.log("user schema");
 export const UserModel = mongoose.models.User || model("User", UserSchema);
