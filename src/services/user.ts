@@ -51,3 +51,31 @@ export const loginService = async (email: string, password: string) => {
     throw new Error(e.message);
   }
 };
+
+export const passwordService = async (email: string, password: string) => {
+  const userEmail = email;
+  const userPassword = password;
+
+  try {
+    const user = await UserModel.findOne({
+      email: userEmail,
+      password: userPassword,
+    });
+
+    if (email == user.email && password == user.password) {
+      const userInfo = {
+        email: user.email,
+        name: user.password,
+      };
+
+      const newToken = jwt.sign(userInfo, "my-super-duper-secret-key", {
+        expiresIn: "1h",
+      });
+      return newToken;
+    } else {
+      throw new Error("Invalid credentials");
+    }
+  } catch (e: any) {
+    throw new Error(e.message);
+  }
+};
