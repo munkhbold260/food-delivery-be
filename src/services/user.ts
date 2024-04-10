@@ -1,5 +1,8 @@
 import { UserModel } from "@/models/user.schema";
 import jwt from "jsonwebtoken";
+import { model } from "mongoose";
+import { nanoid } from "nanoid";
+const nodemailer = require("nodemailer");
 
 export const createUser = async (
   name: string,
@@ -52,26 +55,41 @@ export const loginService = async (email: string, password: string) => {
   }
 };
 
-export const passwordService = async (email: string, password: string) => {
+export const passwordService = async (email: string) => {
+  const passResetCode = nanoid(8);
+  console.log("nanoID", passResetCode);
   const userEmail = email;
-  const userPassword = password;
 
+  // console.log("userEmail===service deer irsen", userEmail);
   try {
     const user = await UserModel.findOne({
       email: userEmail,
-      password: userPassword,
     });
 
-    if (email == user.email && password == user.password) {
-      const userInfo = {
-        email: user.email,
-        name: user.password,
-      };
-
-      const newToken = jwt.sign(userInfo, "my-super-duper-secret-key", {
-        expiresIn: "1h",
+    if (email == user.email) {
+      const transporter = nodemailer.createTransport({
+        service: "Gmail",
+        host: "smtp.gmail.com",
+        port: 465,
+        secure: true,
+        auth: {
+          user: "munkhbold260@gmail.com",
+          pass: "jwlf itpg rmiw qccq",
+        },
       });
-      return newToken;
+      const mailOptions = {
+        from: "munkhbold260@gmail.com",
+        to: userEmail,
+        subject: "Food Delivery Password Reset Code",
+        text: passResetCode,
+      };
+      transporter.sendMail(mailOptions, (error: string) => {
+        if (error) {
+          console.error("Error sending email: ", error);
+        } else {
+          console.log("Email sent: ");
+        }
+      });
     } else {
       throw new Error("Invalid credentials");
     }

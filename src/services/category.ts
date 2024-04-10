@@ -32,11 +32,11 @@ export const deleteCategory = async (name: string) => {
   }
 };
 
-export const updateCategory = async (name: string, newName: string) => {
+export const updateCategory = async (body: CategoryType) => {
+  const updateName = { name: body.name };
+  const filter = { _id: body._id };
   try {
-    await CategoryModel.deleteOne({ name: name });
-    const createCategory = await CategoryModel.create({ newName });
-    return createCategory;
+    await CategoryModel.updateOne(filter, updateName);
   } catch (e: any) {
     throw new Error(e.message);
   }

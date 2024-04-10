@@ -43,8 +43,8 @@ export default async function handler(
 
     case "PUT":
       try {
-        const category = await updateCategory(body.name);
-        console.log(body.name);
+        const category = await updateCategory(body);
+        console.log("bbbbbbbbbbbbboooooooooooooddddddddddddyyyyyy", body);
         return res.status(200).json({ category: category });
       } catch (e: any) {
         return res.status(400).json({ message: e.message });

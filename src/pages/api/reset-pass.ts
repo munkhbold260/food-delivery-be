@@ -1,22 +1,24 @@
-// import connect from "@/helper/db";
-// import { passwordService } from "@/services/user";
-import { NextApiRequest, NextApiResponse } from "next";
-// import NextCors from "nextjs-cors";
-// import { NextResponse, NextRequest } from "next/server";
-const nodemailer = require("nodemailer");
+import { corsAllow } from "@/helper/cors";
+import connect from "@/helper/db";
+import { passwordService } from "@/services/user";
+import type { NextApiRequest, NextApiResponse } from "next";
 
-export default async function handler(
+export default async function home(
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse<any>
 ) {
-  const transporter = nodemailer.createTransport({
-    service: "Gmail",
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true,
-    auth: {
-      user: "your_email@gmail.com",
-      pass: "your_app_password",
-    },
-  });
+  await connect();
+  await corsAllow(req, res);
+  const body = req.body;
+  console.log("recquest recived from front");
+
+  switch (req.method) {
+    case "POST":
+      try {
+        const result = await passwordService(body.email);
+        return res.status(200).json(result);
+      } catch (e: any) {
+        return res.status(400).json({ message: e.message });
+      }
+  }
 }
