@@ -1,6 +1,6 @@
 import { UserModel } from "@/models/user.schema";
+import { NewPasswordType } from "@/utils/types/category";
 import jwt from "jsonwebtoken";
-import { model } from "mongoose";
 import { nanoid } from "nanoid";
 const nodemailer = require("nodemailer");
 
@@ -60,13 +60,20 @@ export const passwordService = async (email: string) => {
   console.log("nanoID", passResetCode);
   const userEmail = email;
 
-  // console.log("userEmail===service deer irsen", userEmail);
   try {
     const user = await UserModel.findOne({
       email: userEmail,
     });
 
     if (email == user.email) {
+      await UserModel.findOneAndUpdate(
+        {
+          email,
+        },
+        {
+          password: passResetCode,
+        }
+      );
       const transporter = nodemailer.createTransport({
         service: "Gmail",
         host: "smtp.gmail.com",
@@ -93,6 +100,16 @@ export const passwordService = async (email: string) => {
     } else {
       throw new Error("Invalid credentials");
     }
+  } catch (e: any) {
+    throw new Error(e.message);
+  }
+};
+
+export const updatePassword = async (body: NewPasswordType) => {
+  const updatePassword = { password: body.newPassword };
+  const filter = { email: body.email };
+  try {
+    await UserModel.updateOne(filter, updatePassword);
   } catch (e: any) {
     throw new Error(e.message);
   }
