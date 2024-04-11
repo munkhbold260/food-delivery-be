@@ -3,4 +3,4 @@ export type CategoryType = {
   name: string;
 };
 
-export type NewPasswordType = { email: string; newPassword: string };
+export type NewPasswordType = { email: string; password: string };

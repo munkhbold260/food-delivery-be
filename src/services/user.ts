@@ -106,7 +106,7 @@ export const passwordService = async (email: string) => {
 };
 
 export const updatePassword = async (body: NewPasswordType) => {
-  const updatePassword = { password: body.newPassword };
+  const updatePassword = { password: body.password };
   const filter = { email: body.email };
   try {
     await UserModel.updateOne(filter, updatePassword);
